@@ -33,8 +33,9 @@ However, understanding how could you configure your custom server for validation
   - [🚀 Installation and Execution](#-installation-and-execution)
     - [🔨 Prerequisites](#-prerequisites)
     - [🗜️ Preparations](#️-preparations)
-    - [Path 1: Server outside the cluster - Docker](#path-1-server-outside-the-cluster---docker)
-  - [Path 2: Installing it in the kubernetes cluster - Kubernetes](#path-2-installing-it-in-the-kubernetes-cluster---kubernetes)
+    - [Deployment Path 1: Server outside the cluster - Docker](#deployment-path-1-server-outside-the-cluster---docker)
+    - [Deployment Path 2: Installing it in the kubernetes cluster - Kubernetes](#deployment-path-2-installing-it-in-the-kubernetes-cluster---kubernetes)
+    - [Configuring the WebHooks](#configuring-the-webhooks)
     - [💼 Usage](#-usage)
   - [📍 Roadmap](#-roadmap)
   - [📎 Contributing](#-contributing)
@@ -53,7 +54,13 @@ However, understanding how could you configure your custom server for validation
 
 - Docker
 - Python 3.10+
-- Kubernet
+- Kubectl
+- yq (only for Kubernetes deployment).
+
+```bash
+sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+sudo chmod a+x /usr/local/bin/yq
+```
 
 [🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
 
@@ -72,7 +79,7 @@ docker build . -f docker/Dockerfile.service -t uvicorn:1.0
 ./gen_certs.sh --domain codetriarii.org --ip 172.20.140.18
 ```
 
-### Path 1: Server outside the cluster - Docker
+### Deployment Path 1: Server outside the cluster - Docker
 
 If you want to deploy the server outside the cluster, make sure to follow these steps:
 
@@ -84,24 +91,57 @@ If you want to deploy the server outside the cluster, make sure to follow these 
 docker compose -f docker-compose.yml up --force-recreate
 ```
 
-## Path 2: Installing it in the kubernetes cluster - Kubernetes
+### Deployment Path 2: Installing it in the kubernetes cluster - Kubernetes
+
+> \[!IMPORTANT\]
+> For kubernetes, you must generate the certs with CN expected the service name to avoid TLS errors.
+
+```bash
+./gen_certs.sh --domain uvicorn-service.demo.svc --ip 127.0.0.1
+```
+
+
 
 1. Create the tls secret from your certs (either the ones you have placed in `certs` folder or the automatically generated ones.)
 
 ```bash
+kubectl create ns demo
+kubectl config set-context --current --namespace demo
 kubectl create secret tls uvicorn-tls-secret --cert=certs/cert.crt --key=certs/cert.key
 ```
 
 2. Create the deployment.
 
 ```bash
-kubectl create -f uvicorn-deployment.yaml
+kubectl create -f kubernetes/uvicorn-deployment.yaml
 ```
 
 > \[!IMPORTANT\]
 > If you are using your own built image, then make sure to change the `image` of the deployment and include `imagePullSecrets` if required (if your registry is authorized as it should be...)
 
 [🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
+
+### Configuring the WebHooks
+
+> \[!IMPORTANT\]
+> Kubernetes versions enable by default `ValidatingAdmissionWebhook` and `MutatingAdmissionWebhook`. Ensure both plugins are enabled in your cluster. If not, just include both in `--enable-admission-plugins=` flag of `/etc/kubernetes/manifests/kube-apiserver.yaml` of your master(s) node.
+
+1. Set the ca-bundle from `certs` folder.
+
+```bash
+{
+   ca_bundle=$(cat certs/ca.crt | base64 -w0)
+   yq read kubernetes/validation-webhook.yaml -j | jq ".webhooks[].clientConfig.caBundle = \"${ca_bundle}\"" | yq read -P - > kubernetes/validation-webhook.yaml.bak
+   mv kubernetes/validation-webhook.yaml.bak kubernetes/validation-webhook.yaml
+}
+```
+
+2. Create the validation and mutating webhook definitions:
+
+```bash
+kubectl create -f kubernetes/validation-webhook.yaml
+kubectl create -f kubernetes/mutating-webhook.yaml
+```
 
 <!-- USAGE EXAMPLES -->
 ### 💼 Usage
