@@ -1,26 +1,28 @@
 <div align="center">
 
 <!-- PROJECT LOGO -->
-# 📝 Project Name
+# 📝 POC: Kubernetes Custom Admission Control for Deployments
 
 
 <!-- TECNOLOGIES -->
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Selenium](https://img.shields.io/badge/Selenium-43B02A?style=for-the-badge&logo=Selenium&logoColor=white)
-![Brave](https://img.shields.io/badge/Brave-FB542B?style=for-the-badge&logo=Brave&logoColor=white)
-![Chromium](https://img.shields.io/badge/Chromium-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Kubernetes Badge](https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=fff&style=flat)
+![Docker Badge](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff&style=flat)
+![FastAPI Badge](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=fff&style=flat)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In purus nulla, consectetur nec justo id, mattis venenatis mi. Suspendisse potenti. Donec et tempus libero, in aliquam lectus. Sed volutpat, eros sit amet vulputate auctor, sem enim lacinia arcu, ac porta dolor neque a mi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse lacinia, quam quis vestibulum rutrum, justo elit bibendum magna, quis dapibus augue diam in lorem. Phasellus tristique vitae leo id sagittis.
 
-[View Demo](#) · [Report Bug](PROJECT_URL_TO_REPLACE/issues) · [Request Feature](PROJECT_URL_TO_REPLACE/issues)
+This repository contains a well detailed PoC about an specific use case: enabling custom validation and mutating webhook for your Kubernetes deployments based on a set of rules.
+There are many solutions out there like OPA Gatekeeper or Kyverno specialized for this.
+However, understanding how could you configure your custom server for validation or mutating webhook can provide you even farther flexibility if needed.
+
+[Report Bug](https://github.com/paf-triarii/kubernetes-deployment-validation-and-mutating--webhook/issues) · [Request Feature](https://github.com/paf-triarii/kubernetes-deployment-validation-and-mutating--webhook/issues)
 </div>
 
 <!-- TABLE OF CONTENTS -->
 
 
 ## 📚 Table of contents
-- [📝 Project Name](#-project-name)
+
+- [📝 POC: Kubernetes Custom Admission Control for Deployments](#-poc-kubernetes-custom-admission-control-for-deployments)
   - [📚 Table of contents](#-table-of-contents)
   - [💡 Structure](#-structure)
   - [🚀 Installation and Execution](#-installation-and-execution)
@@ -33,7 +35,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. In purus nulla, consect
   - [📎 Contributing](#-contributing)
   - [📃 License](#-license)
   - [👥 Contact](#-contact)
-  - [🔍 Acknowledgments](#-acknowledgments)
 
 <!--te-->
 
@@ -47,11 +48,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. In purus nulla, consect
 
 - Docker
 - Python 3.10+
-- Node 19+
-- Selenium, BeautifulSoup, undetected_chromedriver
-- Brave Browser & Compatible WebDriver (Chromedriver/Geckodriver)
+- Kubernet
 
-[🔝 Back to top](#-project-name)
+[🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
 
 ### 🗜️ Installation
 
@@ -91,7 +90,7 @@ docker build -t <image_name>:<tag> .
 docker run -it --name <container_name> -p <ports...> -v <volumes...> <image_name>:<tag>
 ```
 
-[🔝 Back to top](#-project-name)
+[🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
 
 <!-- USAGE EXAMPLES -->
 ### 💼 Usage
@@ -99,26 +98,19 @@ docker run -it --name <container_name> -p <ports...> -v <volumes...> <image_name
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
-[🔝 Back to top](#-project-name)
+[🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
 
 <!-- GETTING STARTED -->
 
 <!-- ROADMAP -->
 ## 📍 Roadmap
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [x] English
-    - [ ] Spanish
+- [x] Create validation/mutating server with FaskAPI.
+- [x] Prepare docker and kubernetes deployment (two flavors).
 
-See the [open issues](PROJECT_URL_TO_REPLACE/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/paf-triarii/kubernetes-deployment-validation-and-mutating--webhook/issues) for a full list of proposed features (and known issues).
 
-For a more detailed understanding of the project progress, check the <a href="docs/CHANGELOG.md">CHANGELOG</a>
-
-[🔝 Back to top](#-project-name)
+[🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
 
 <!-- CONTRIBUTING -->
 ## 📎 Contributing
@@ -148,14 +140,14 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 5. Open a Pull Request
 
-[🔝 Back to top](#-project-name)
+[🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
 
 <!-- LICENSE -->
 ## 📃 License
 
 Distributed under the [`APACHE 2.0`](./LICENSE) License.
 
-[🔝 Back to top](#-project-name)
+[🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
 
 <!-- CONTACT -->
 ## 👥 Contact
@@ -184,20 +176,4 @@ Do not skip it, you will like it :smirk: :smirk: :smirk: :+1:
 
 Don't forget to give the project a star if you liked it! Thanks again! :star2: :yellow_heart:
 
-[🔝 Back to top](#-project-name)
-
-<!-- ACKNOWLEDGMENTS -->
-## 🔍 Acknowledgments
-
-:100: :100: :100: For those that are curious about some of the resources or utilities and for sure thanking and giving credit to authors, we provide you a list of the most interesting ones (in our understanding) :100: :100: :100:
-
-- [Choose an Open Source License](https://choosealicense.com)
-- [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-- [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-- [Malven's Grid Cheatsheet](https://grid.malven.co/)
-- [Img Shields](https://shields.io)
-- [GitHub Pages](https://pages.github.com)
-- [Font Awesome](https://fontawesome.com)
-- [React Icons](https://react-icons.github.io/react-icons/search)
-
-[🔝 Back to top](#-project-name)
+[🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
