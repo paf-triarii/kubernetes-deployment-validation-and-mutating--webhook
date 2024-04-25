@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
 from typing import Optional, Union, List, Dict
 from m_models.pods import Pod
 from m_models.commons import Metadata, BaseModelConfig

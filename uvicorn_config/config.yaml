@@ -1,0 +1,25 @@
+rules:
+  - name: "whitelist_repositories"
+    enabled: true
+    repositories:
+      - "docker.io/library"
+  
+  - name: "always_image_pull_policy"
+    enabled: true
+
+  - name: "resources_definition"
+    enabled: true
+    resources:
+      limits:
+        cpu: "100m"
+        memory: "128Mi"
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+
+  - name: "security_context"
+    enabled: true
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 2000

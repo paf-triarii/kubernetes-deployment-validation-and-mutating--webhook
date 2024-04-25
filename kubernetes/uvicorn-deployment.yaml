@@ -36,7 +36,12 @@ spec:
         volumeMounts:
         - name: certs
           mountPath: /app/certs
+        - name: uvicorn-config
+          mountPath: /app/uvicorn-config
       volumes:
       - name: certs
         secret:
           secretName: uvicorn-tls-secret
+      - name: uvicorn-config
+        configMap:
+          name: uvicorn-config

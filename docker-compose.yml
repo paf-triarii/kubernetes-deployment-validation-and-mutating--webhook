@@ -27,7 +27,6 @@ services:
       - "/app/certs/cert.crt"
       - "--reload"
     volumes:
-      # - ./certs:/app/certs
       - ./:/app
     logging: *logging
     ports:
