@@ -71,7 +71,7 @@ sudo chmod a+x /usr/local/bin/yq
 docker build . -f docker/Dockerfile.service -t uvicorn:1.0
 ```
 
-2. [Optional] Generate self-signed certs for caddy. Omit this step if you have your own certificates for TLS exposure.
+2. [Optional] Generate self-signed certs for the uvicorn server. **Omit this step if you have your own certificates for TLS exposure.**
 
 ```bash
 # Make sure to set your target domain and ip
