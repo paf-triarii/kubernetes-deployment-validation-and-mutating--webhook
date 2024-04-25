@@ -1,7 +1,12 @@
 from pydantic import BaseModel, Field
 from typing import Dict, List, Optional
 
-class Metadata(BaseModel):
+class BaseModelConfig(BaseModel):
+    class Config:
+        orm_mode = True
+        exclude_none = True
+
+class Metadata(BaseModelConfig):
     name: str
     namespace: Optional[str] = None
     annotations: Optional[Dict[str, str]] = Field(default_factory=dict)

@@ -18,7 +18,7 @@ def read_root():
 async def validate(deployment: Deployment = Body(...)):
     try:
         pretty_print(type(deployment), "Request Type")
-        pretty_print(deployment, "Request JSON")
+        pretty_print(deployment.model_dump_json(exclude_none=True), "Request JSON")
         return process_request(True, "uid", deployment.metadata.name)
     except ValidationError as e:
         return process_request(False, "uid", str(e))
