@@ -36,7 +36,6 @@ However, understanding how could you configure your custom server for validation
     - [Deployment Path 1: Server outside the cluster - Docker](#deployment-path-1-server-outside-the-cluster---docker)
     - [Deployment Path 2: Installing it in the kubernetes cluster - Kubernetes](#deployment-path-2-installing-it-in-the-kubernetes-cluster---kubernetes)
       - [Configuring the WebHooks](#configuring-the-webhooks)
-    - [💼 Usage](#-usage)
   - [📍 Roadmap](#-roadmap)
   - [📎 Contributing](#-contributing)
   - [📃 License](#-license)
@@ -107,10 +106,19 @@ docker compose -f docker-compose.yml up --force-recreate
 ```bash
 kubectl create ns demo
 kubectl config set-context --current --namespace demo
-kubectl create secret tls uvicorn-tls-secret --cert=certs/cert.crt --key=certs/cert.key
+kubectl create secret tls uvicorn-tls-secret --cert=certs/cert.crt --key=certs/cert.key -n demo
 ```
 
-2. Create the deployment.
+2. Create the configmap with the rules details.
+
+```bash
+kubectl create cm uvicorn-config --from-file=uvicorn_config/config.yaml -n demo
+```
+
+> \[!TIP\]
+> Check the rules before creation, to enable, disable, change the parameters as you require.
+
+3. Create the deployment.
 
 ```bash
 kubectl create -f kubernetes/uvicorn-deployment.yaml
@@ -143,14 +151,6 @@ kubectl create -f kubernetes/validation-webhook.yaml
 kubectl create -f kubernetes/mutating-webhook.yaml
 ```
 
-<!-- USAGE EXAMPLES -->
-### 💼 Usage
-
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-[🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
-
 <!-- GETTING STARTED -->
 
 <!-- ROADMAP -->
@@ -158,6 +158,8 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 - [x] Create validation/mutating server with FastAPI.
 - [x] Prepare docker and kubernetes deployment (two flavors).
+- [ ] Implement rules based on `config.yaml`
+  - [x] Support for pods - whitelist images
 
 See the [open issues](https://github.com/paf-triarii/kubernetes-deployment-validation-and-mutating--webhook/issues) for a full list of proposed features (and known issues).
 

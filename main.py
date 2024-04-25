@@ -1,11 +1,16 @@
-import yaml, os
-from fastapi import Body, FastAPI
+import os
+import yaml
+from fastapi import Body, FastAPI, Query, Request
 from pydantic import ValidationError
 from m_utils.pretty_print import pretty_print
 from m_models.admission_request import AdmissionReview
+from starlette.middleware.base import BaseHTTPMiddleware
 from m_validations.pods import validate_pod
 from m_validations.deployments import validate_deployment
 from m_validations.statefulsets import validate_statefulset
+from m_logger.logger import get_custom_logger
+
+logger = get_custom_logger()
 
 app = FastAPI()
 
@@ -18,12 +23,24 @@ def read_config():
         except yaml.YAMLError as exc:
             print(exc)
 
+class LoggingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        print(f"Incoming request: {request.method} {request.url}")
+        if os.environ.get("LOG_LEVEL", "INFO") == "DEBUG":
+            print(f"Request headers: {request.headers}")
+            pretty_print(f"{await request.json()}", "Request body")
+        response = await call_next(request)
+        return response
+
+app = FastAPI()
+app.add_middleware(LoggingMiddleware)
+
 @app.get("/")
 def read_root():
     return [{"validate_endpoint": "/validate"}, {"mutate_endpoint": "/mutate"}]
 
 @app.post("/validate")
-async def validate(admission_review: AdmissionReview = Body(...)):
+async def validate(admission_review: AdmissionReview = Body(...), timeout: str = Query(None)):
     config = read_config()
     pretty_print(config)
     success = {"apiVersion": "admission.k8s.io/v1", "kind": "AdmissionReview", "response": {"uid": admission_review.request.uid, "allowed": True}}

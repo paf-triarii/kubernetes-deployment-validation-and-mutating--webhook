@@ -6,9 +6,9 @@ from m_models.deployments import Deployment
 
 class UserInfo(BaseModelConfig):
     username: str
-    uid: str
+    uid: Optional[str] = None
     groups: List[str]
-    extra: Optional[Dict[str, List[str]]]
+    extra: Optional[Dict[str, List[str]]] = None
 
 class StatefulSetSpec(BaseModelConfig):
     # Placeholder for the statefulset spec properties

@@ -29,10 +29,14 @@ spec:
       containers:
       - name: uvicorn
         image: pedroarias1015/kubernetes-validation-mutating-server:1.0
+        imagePullPolicy: Always
         command: ["/usr/local/bin/uvicorn"]
         args: ["main:app", "--host", "0.0.0.0", "--port", "8443", "--ssl-keyfile", "/app/certs/tls.key", "--ssl-certfile", "/app/certs/tls.crt"]
         ports:
         - containerPort: 8443
+        env:
+        - name: LOG_LEVEL
+          value: "DEBUG"
         volumeMounts:
         - name: certs
           mountPath: /app/certs
