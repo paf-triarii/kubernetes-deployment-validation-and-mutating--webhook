@@ -1,11 +1,11 @@
-<div align="center">
-
 ---
 
 > \[!CAUTION\]
 > **THIS PROJECT IS UNDER CONSTRUCTION (WIP). DO NOT TAKE IT SERIOUSLY YET!**
 
 ---
+
+<div align="center">
 
 <!-- PROJECT LOGO -->
 # 📝 POC: Kubernetes Custom Admission Control for Deployments
