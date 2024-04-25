@@ -20,9 +20,9 @@ display_help() {
     exit 0
 }
 
-generate_certs() {
+generate_ca_and_certs() {
     SAN="DNS:$domain,IP:$ip"
-    
+
     if [ -n "$dns_alts" ]; then
         IFS=',' read -ra DNS_ALTS <<< "$dns_alts"
         for dns in "${DNS_ALTS[@]}"; do
@@ -37,12 +37,19 @@ generate_certs() {
         done
     fi
 
-    openssl req -new -nodes -x509 -newkey rsa:${bits} -keyout "${name}.key" -out "${name}.crt" -days ${exp_time} -subj "/CN=${domain}" -extensions v3_req -config <( cat /etc/ssl/openssl.cnf \
-        <(printf "[v3_req]\nsubjectAltName=${SAN}") )
-    
-    mkdir -p $output
-    mv ${name}.key ${name}.crt $output
-    echo "Generated ${name}.key and ${name}.crt with SAN: $SAN"
+    # Create the CA Key and Certificate
+    openssl req -x509 -new -nodes -keyout "ca.key" -sha256 -days ${exp_time} -out "ca.crt" -subj "/CN=${domain} CA" -config <( cat /etc/ssl/openssl.cnf \
+        <(printf "[v3_ca]\nsubjectAltName=${SAN}\nkeyUsage=critical, digitalSignature, keyCertSign\nbasicConstraints=critical, CA:TRUE, pathlen:0"))
+
+    # Create the Server Key, CSR, and Certificate
+    openssl req -new -nodes -newkey rsa:${bits} -keyout "${name}.key" -out "${name}.csr" -subj "/CN=${domain}" -config <( cat /etc/ssl/openssl.cnf \
+        <(printf "[v3_req]\nsubjectAltName=${SAN}"))
+    openssl x509 -req -in "${name}.csr" -CA "ca.crt" -CAkey "ca.key" -CAcreateserial -out "${name}.crt" -days ${exp_time} -sha256 -extfile <(printf "subjectAltName=${SAN}")
+
+    # Move files to the specified output directory
+    mkdir -p "$output"
+    mv "${name}.key" "${name}.crt" "ca.crt" "ca.key" "${name}.csr" "$output"
+    echo "Generated CA and server certificate with SAN: $SAN in $output"
 }
 
 #################################
@@ -124,4 +131,4 @@ if [ -z "$domain" ] || [ -z "$ip" ]; then
     exit 1
 fi
 
-generate_certs
+generate_ca_and_certs

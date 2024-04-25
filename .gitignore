@@ -2,5 +2,6 @@
 __pycache__/
 *.crt
 *.key
+*.csr
 access_token
 nginx-deployment.json
