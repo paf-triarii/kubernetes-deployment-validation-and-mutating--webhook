@@ -1,0 +1,32 @@
+version: '3.9'
+
+### Logging format
+x-logging: &logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  uvicorn:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+    image: uvicorn:1.0
+    entrypoint:
+      - "/usr/local/bin/uvicorn"
+    command:
+      - "main:app"
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "443"
+      - "--ssl-keyfile"
+      - "/app/certs/cert.key"
+      - "--ssl-certfile"
+      - "/app/certs/cert.crt"
+    volumes:
+      - ./certs:/app/certs
+    logging: *logging
+    ports:
+      - "443:443"

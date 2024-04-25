@@ -32,7 +32,9 @@ However, understanding how could you configure your custom server for validation
   - [💡 Structure](#-structure)
   - [🚀 Installation and Execution](#-installation-and-execution)
     - [🔨 Prerequisites](#-prerequisites)
-    - [🗜️ Installation](#️-installation)
+    - [🗜️ Preparations](#️-preparations)
+    - [Path 1: Server outside the cluster - Docker](#path-1-server-outside-the-cluster---docker)
+  - [Path 2: Installing it in the kubernetes cluster - Kubernetes](#path-2-installing-it-in-the-kubernetes-cluster---kubernetes)
     - [💼 Usage](#-usage)
   - [📍 Roadmap](#-roadmap)
   - [📎 Contributing](#-contributing)
@@ -55,13 +57,49 @@ However, understanding how could you configure your custom server for validation
 
 [🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
 
-### 🗜️ Installation
+### 🗜️ Preparations
 
-1. Build required docker images and upload to your cluster registry. Other option is to use my already built images published in Docker Hub (uvicorn: , caddy:)
+1. Build required docker images and upload to your cluster registry. Other option is to use my already publish image in DockerHub.
 
 ```bash
 docker build . -f docker/Dockerfile.service -t uvicorn:1.0
 ```
+
+2. [Optional] Generate self-signed certs for caddy. Omit this step if you have your own certificates for TLS exposure.
+
+```bash
+# Make sure to set your target domain and ip
+./gen_certs.sh --domain codetriarii.org --ip 172.20.140.18
+```
+
+### Path 1: Server outside the cluster - Docker
+
+If you want to deploy the server outside the cluster, make sure to follow these steps:
+
+1. [Optional] If you have your own certs, place those in `certs` folder. Ensure naming is `ca.crt`, `cert.crt` and `cert.key`.
+
+2. Start the server with `docker compose`.
+
+```bash
+docker compose -f docker-compose.yml up --force-recreate
+```
+
+## Path 2: Installing it in the kubernetes cluster - Kubernetes
+
+1. Create the tls secret from your certs (either the ones you have placed in `certs` folder or the automatically generated ones.)
+
+```bash
+kubectl create secret tls uvicorn-tls-secret --cert=certs/cert.crt --key=certs/cert.key
+```
+
+2. Create the deployment.
+
+```bash
+kubectl create -f uvicorn-deployment.yaml
+```
+
+> \[!IMPORTANT\]
+> If you are using your own built image, then make sure to change the `image` of the deployment and include `imagePullSecrets` if required (if your registry is authorized as it should be...)
 
 [🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
 
