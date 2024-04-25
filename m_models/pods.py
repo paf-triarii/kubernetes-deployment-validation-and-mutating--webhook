@@ -1,6 +1,7 @@
-from m_models.commons import BaseModelConfig
+from m_models.commons import BaseModelConfig, Metadata, KubernetesObject
 from m_models.containers import Container
 from typing import Dict, List, Optional, Union
+from pydantic import BaseModel, Field
 
 class LabelSelectorRequirement(BaseModelConfig):
     key: str
@@ -58,3 +59,6 @@ class TemplateSpec(BaseModelConfig):
     terminationGracePeriodSeconds: Optional[int] = None
     tolerations: Optional[List[Toleration]] = None
     volumes: Optional[List[Volume]] = None
+
+class Pod(KubernetesObject):
+    spec: TemplateSpec

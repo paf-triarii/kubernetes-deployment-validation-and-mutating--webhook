@@ -16,8 +16,8 @@ class SecurityContextContainer(BaseModelConfig):
 
 class Port(BaseModelConfig):
     containerPort: int
-    name: str
-    protocol: str = 'TCP'
+    name: Optional[str] = None
+    protocol: Optional[str] = 'TCP'
 
 class VolumeMount(BaseModelConfig):
     mountPath: str

@@ -35,7 +35,7 @@ However, understanding how could you configure your custom server for validation
     - [🗜️ Preparations](#️-preparations)
     - [Deployment Path 1: Server outside the cluster - Docker](#deployment-path-1-server-outside-the-cluster---docker)
     - [Deployment Path 2: Installing it in the kubernetes cluster - Kubernetes](#deployment-path-2-installing-it-in-the-kubernetes-cluster---kubernetes)
-    - [Configuring the WebHooks](#configuring-the-webhooks)
+      - [Configuring the WebHooks](#configuring-the-webhooks)
     - [💼 Usage](#-usage)
   - [📍 Roadmap](#-roadmap)
   - [📎 Contributing](#-contributing)
@@ -121,7 +121,7 @@ kubectl create -f kubernetes/uvicorn-deployment.yaml
 
 [🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)
 
-### Configuring the WebHooks
+#### Configuring the WebHooks
 
 > \[!IMPORTANT\]
 > Kubernetes versions enable by default `ValidatingAdmissionWebhook` and `MutatingAdmissionWebhook`. Ensure both plugins are enabled in your cluster. If not, just include both in `--enable-admission-plugins=` flag of `/etc/kubernetes/manifests/kube-apiserver.yaml` of your master(s) node.
@@ -156,7 +156,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## 📍 Roadmap
 
-- [x] Create validation/mutating server with FaskAPI.
+- [x] Create validation/mutating server with FastAPI.
 - [x] Prepare docker and kubernetes deployment (two flavors).
 
 See the [open issues](https://github.com/paf-triarii/kubernetes-deployment-validation-and-mutating--webhook/issues) for a full list of proposed features (and known issues).

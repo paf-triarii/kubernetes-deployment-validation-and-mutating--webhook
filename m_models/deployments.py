@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
 from typing import Dict, List, Optional, Union
-from m_models.commons import Metadata, BaseModelConfig
+from m_models.commons import Metadata, BaseModelConfig, KubernetesObject
 from m_models.pods import TemplateSpec
 
 class Selector(BaseModelConfig):
@@ -34,8 +34,5 @@ class Spec(BaseModelConfig):
 # Main Model #
 ##############
 
-class Deployment(BaseModelConfig):
-    apiVersion: str = Field(..., alias="apiVersion")
-    kind: str
-    metadata: Metadata
+class Deployment(KubernetesObject):
     spec: Spec

@@ -2,22 +2,30 @@ import json
 from fastapi import Body, FastAPI
 from pydantic import ValidationError
 from m_utils.pretty_print import pretty_print
-from m_models.deployments import Deployment
+from m_models.admission_request import AdmissionReview
 
 app = FastAPI()
-
-def process_request(allowed: bool, uid: str, message: str):
-    allowed_str = "allowed" if allowed else "denied"
-    return {"response": {"allowed": allowed_str, "uid": uid, "status": {"message": message}}}
 
 @app.get("/")
 def read_root():
     return [{"validate_endpoint": "/validate"}, {"mutate_endpoint": "/mutate"}]
 
 @app.post("/validate")
-async def validate(deployment: Deployment = Body(...)):
+async def validate(admission_review: AdmissionReview = Body(...)):
     try:
-        pretty_print(deployment.model_dump_json(exclude_none=True), "Request JSON")
-        return process_request(True, "uid", deployment.metadata.name)
+        # Use Pydantic's json() method to serialize the review for logging/debugging
+        print(admission_review.model_dump_json(exclude_none=True, by_alias=True))
+        # Example validation logic
+        if admission_review.request.object.kind == 'pod':
+            # Perform specific validation for Pod
+            pass
+        elif admission_review.request.object.kind == 'deployment':
+            # Perform specific validation for Deployment
+            pass
+        elif admission_review.request.object.kind == 'statefulset':
+            # Perform specific validation for StatefulSet
+            pass
+        
+        return {"apiVersion": "admission.k8s.io/v1", "kind": "AdmissionReview", "response": {"uid": admission_review.request.uid, "allowed": True}}
     except ValidationError as e:
-        return process_request(False, "uid", str(e))
+        return {"apiVersion": "admission.k8s.io/v1", "kind": "AdmissionReview", "response": {"uid": "uid", "allowed": False, "status": {"message": str(e)}}}

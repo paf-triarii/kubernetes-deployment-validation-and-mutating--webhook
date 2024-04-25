@@ -25,8 +25,10 @@ services:
       - "/app/certs/cert.key"
       - "--ssl-certfile"
       - "/app/certs/cert.crt"
+      - "--reload"
     volumes:
-      - ./certs:/app/certs
+      # - ./certs:/app/certs
+      - ./:/app
     logging: *logging
     ports:
       - "443:443"

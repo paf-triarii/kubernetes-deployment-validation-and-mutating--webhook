@@ -5,3 +5,4 @@ __pycache__/
 *.csr
 access_token
 nginx-deployment.json
+admission_request.json
