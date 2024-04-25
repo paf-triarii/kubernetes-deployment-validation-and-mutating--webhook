@@ -28,8 +28,6 @@ However, understanding how could you configure your custom server for validation
   - [🚀 Installation and Execution](#-installation-and-execution)
     - [🔨 Prerequisites](#-prerequisites)
     - [🗜️ Installation](#️-installation)
-      - [Local environment](#local-environment)
-      - [Docker environment](#docker-environment)
     - [💼 Usage](#-usage)
   - [📍 Roadmap](#-roadmap)
   - [📎 Contributing](#-contributing)
@@ -54,40 +52,10 @@ However, understanding how could you configure your custom server for validation
 
 ### 🗜️ Installation
 
-#### Local environment
-
-1. Clone the repo
-
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-
-2. Install packages
-
-   ```sh
-   npm install
-   ```
-
-3. Enter your API in `config.js`
-
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-
-#### Docker environment
-
-Install `Docker Engine`. Visit [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/) for more information.
-
-1. Build docker image:
+1. Build required docker images and upload to your cluster registry. Other option is to use my already built images published in Docker Hub (uvicorn: , caddy:)
 
 ```bash
-docker build -t <image_name>:<tag> .
-```
-
-2. Run docker image:
-
-```bash
-docker run -it --name <container_name> -p <ports...> -v <volumes...> <image_name>:<tag>
+docker build . -f docker/Dockerfile.service -t uvicorn:1.0
 ```
 
 [🔝 Back to top](#-poc-kubernetes-custom-admission-control-for-deployments)

@@ -1,0 +1,4 @@
+codetriarii.org {
+    tls /etc/ssl/caddy/caddy-selfsigned.crt /etc/ssl/caddy/caddy-selfsigned.key
+    reverse_proxy localhost:8000
+}

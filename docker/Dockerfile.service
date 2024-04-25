@@ -1,0 +1,40 @@
+FROM debian:12.5@sha256:b37bc259c67238d814516548c17ad912f26c3eed48dd9bb54893eafec8739c89 as build-env
+
+RUN apt-get update && apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    python3.11 \
+    python3-pip \
+    pipenv \
+    curl
+
+RUN groupadd -g 1000 app \
+  && useradd -u 1000 -g app app
+
+COPY .. /app
+
+WORKDIR /app
+
+RUN pipenv install --system
+
+FROM gcr.io/distroless/python3-debian12@sha256:22a48ea7c898642dee832615db15dd3372b652ecd5dfa0b3f795ac3c9312aba2
+
+ENV HOME=/app
+WORKDIR /app
+
+# Copy the python packages from the build-env
+COPY --from=build-env /usr/lib/python3/dist-packages /usr/local/lib/python3/dist-packages
+COPY --from=build-env /usr/lib/python3.11 /usr/lib/python3.11
+COPY --from=build-env /usr/local/bin/uvicorn /usr/local/bin/uvicorn
+COPY --from=build-env /usr/local/lib/python3.11/dist-packages /usr/local/lib/python3.11/dist-packages
+
+
+# Transfer the user and group from the build-env
+COPY --from=build-env /etc/passwd /etc/passwd
+COPY --from=build-env /etc/group /etc/group
+COPY --from=build-env /etc/shadow /etc/shadow
+COPY --from=build-env --chown=1000:1000 /app /app
+
+USER 1000:1000
+
+ENTRYPOINT [ "/usr/local/bin/uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
