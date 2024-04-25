@@ -89,7 +89,7 @@ class Container(BaseModel):
     name: str
     image: str
     args: Optional[List[str]] = None
-    imagePullPolicy: Optional[str] = None
+    imagePullPolicy: Optional[str] = 'Always'
     ports: Optional[List[Port]] = None
     livenessProbe: Optional[Probe] = None
     readinessProbe: Optional[Probe] = None
