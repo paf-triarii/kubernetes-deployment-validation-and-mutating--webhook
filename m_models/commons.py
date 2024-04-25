@@ -3,7 +3,7 @@ from typing import Dict, List, Optional
 
 class BaseModelConfig(BaseModel):
     class Config:
-        orm_mode = True
+        from_attributes = True
         exclude_none = True
 
 class Metadata(BaseModelConfig):

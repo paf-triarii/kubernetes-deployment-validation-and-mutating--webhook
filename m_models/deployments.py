@@ -3,11 +3,8 @@ from typing import Dict, List, Optional, Union
 from m_models.commons import Metadata, BaseModelConfig
 from m_models.pods import TemplateSpec
 
-class MatchLabels(BaseModelConfig):
-    labels: Dict[str, str] = Field(default_factory=dict)
-
 class Selector(BaseModelConfig):
-    matchLabels: MatchLabels
+    matchLabels: Dict[str, str] = Field(default_factory=dict)
 
 class RollingUpdate(BaseModelConfig):
     maxSurge: Optional[str] = None
@@ -28,7 +25,7 @@ class Template(BaseModelConfig):
 class Spec(BaseModelConfig):
     selector: Selector
     template: Template
-    replicas: int
+    replicas: Optional[int] = 1
     progressDeadlineSeconds: Optional[int] = None
     revisionHistoryLimit: Optional[int] = None
     strategy: Optional[Strategy] = None
